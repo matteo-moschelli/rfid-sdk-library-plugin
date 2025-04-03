@@ -1,0 +1,35 @@
+{
+  "name": "rfid-sdk-library",
+  "version": "1.0.0",
+  "description": "This plugin provides a high-level interface for interacting with various RFID devices.",
+  "cordova": {
+    "id": "it.anseltechnology.rfid.sdklibrary.plugin",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matteo-moschelli/rfid-sdk-library-plugin.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=7.1.0"
+    },
+    {
+      "name": "cordova-android",
+      "version": ">=6.3.0"
+    }
+  ],
+  "author": "Matteo Moschelli",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matteo-moschelli/rfid-sdk-library-plugin/issues"
+  },
+  "homepage": "https://github.com/matteo-moschelli/rfid-sdk-library-plugin#readme"
+}
