@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="it.anseltechnology.rfid.sdklibrary.plugin" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>RfidSdkLibrary</name>
+    <description>This plugin provides a high-level interface for interacting with various RFID devices.</description>
+    <repo>https://github.com/matteo-moschelli/rfid-sdk-library-plugin</repo>
+    <engines>
+        <engine name="cordova" version=">=7.1.0"/>
+        <engine name="cordova-android" version=">=6.3.0"/>
+    </engines>
+    <js-module src="www/rfidsdklibrary.js" name="RfidSdkLibrary" >
+        <clobbers target="cordova.plugins.RfidSdkLibrary" />
+    </js-module>
+    <platform name="android">
+        <source-file src="src/android/RfidSdkLibrary.java" target-dir="src/it/anseltechnology/rfid/sdklibrary/plugin/rfidsdklibrary" />
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="RfidSdkLibrary">
+                <param name="android-package" value="it.anseltechnology.rfid.sdklibrary.plugin.RfidSdkLibrary" />
+            </feature>
+        </config-file>
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.NFC" />
+            <uses-permission android:name="android.permission.WAKE_LOCK" />
+            <uses-permission android:name="android.permission.BLUETOOTH" />
+            <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+            <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+            <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+            <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+        </config-file>
+        <framework src="src/android/rfidsdklibrary.gradle" custom="true" type="gradleReference"/>  
+        <lib-file src="src/android/libs/rfidsdklibrary-debug.aar"/>
+        <lib-file src="src/android/libs/NurApiAndroid.aar"/>
+        <lib-file src="src/android/libs/device.sdk.rfid.aar"/>
+    </platform>
+</plugin>
