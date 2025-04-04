@@ -9,6 +9,10 @@ dependencies {
     implementation(name:'device.sdk.rfid', ext:'aar')
     implementation(name:'NurApiAndroid', ext:'aar')
     implementation(name:'rfidsdklibrary-debug', ext:'aar')
+
+    implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
 }
 
 android {
