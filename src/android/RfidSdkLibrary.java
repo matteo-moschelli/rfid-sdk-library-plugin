@@ -2,8 +2,6 @@ package it.anseltechnology.rfid.sdklibrary.plugin;
 
 import org.apache.cordova.CordovaPlugin;
 
-import java.util.Observer;
-
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
 import org.apache.cordova.PluginResult.Status;
@@ -75,6 +73,7 @@ public class RfidSdkLibrary extends CordovaPlugin {
                     myCallbackContext.success("Dispositivo connesso");
                 }
             };            
+            this.rfidInterface.connectState.observeForever(mConnectionStateObserver);
         }
         catch (Exception e) {
             e.printStackTrace();
