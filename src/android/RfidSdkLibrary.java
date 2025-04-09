@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.util.Log;
+import androidx.lifecycle.Observer;
 
 import it.anseltechnology.rfid.sdklibrary.RfidLibraryInterface;
 import it.anseltechnology.rfid.sdklibrary.core.enums.ConnectionState;
