@@ -135,7 +135,9 @@ public class RfidSdkLibrary extends CordovaPlugin {
     private void setRfidListener() {
         this.rfidInterface.setOnRfidResultListener(new OnRfidResultListener() {
             public void onRfidFound(String rfid) {
-                myRfidCallbackContext.success("{\"status\":\"OK\", \"body\":\""+rfid+"\"}");
+                PluginResult res = new PluginResult(PluginResult.Status.OK, "{\"status\":\"OK\", \"body\":\""+rfid+"\"}");
+                res.setKeepCallback(true);
+                myRfidCallbackContext.sendPluginResult(res);
             }
 
             public void onRfidNotFound() {
@@ -143,7 +145,9 @@ public class RfidSdkLibrary extends CordovaPlugin {
             }
 
             public void onRfidTooManyFound(int tagNumber) {
-                myRfidCallbackContext.success("{\"status\":\"KO\", \"error\":\"Troppi tag in campo (letti "+ tagNumber +" tag)\"}");
+                PluginResult res = new PluginResult(PluginResult.Status.ERROR, "{\"status\":\"KO\", \"error\":\"Troppi tag in campo (letti "+ tagNumber +" tag)\"}");
+                res.setKeepCallback(true);
+                myRfidCallbackContext.sendPluginResult(res);
             }
 
             public void onRfidInventory() {
