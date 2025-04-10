@@ -109,12 +109,19 @@ public class RfidSdkLibrary extends CordovaPlugin {
 
     private void startRfidScan() {
 
-        this.rfidInterface.startRfidScan(false);
+        try {
+            this.rfidInterface.startRfidScan(false);
 
-        // Send no result for synchronous callback
-        PluginResult pluginresult = new PluginResult(PluginResult.Status.NO_RESULT);
-        pluginresult.setKeepCallback(true);
-        this.myCallbackContext.sendPluginResult(pluginresult);
+            // Send no result for synchronous callback
+            PluginResult pluginresult = new PluginResult(PluginResult.Status.NO_RESULT);
+            pluginresult.setKeepCallback(true);
+            this.myCallbackContext.sendPluginResult(pluginresult);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            myCallbackContext.error(e.getMessage());
+        }
+        
     }
 
     private void stopRfidScan() {
