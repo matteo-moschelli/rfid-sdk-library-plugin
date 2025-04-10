@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer;
 
 import it.anseltechnology.rfid.sdklibrary.RfidLibraryInterface;
 import it.anseltechnology.rfid.sdklibrary.core.enums.ConnectionState;
+import it.anseltechnology.rfid.sdklibrary.core.interfaces.callbacks.OnConnectionStateListener;
 
 /**
  * This class echoes a string called from JavaScript.
