@@ -109,7 +109,7 @@ public class RfidSdkLibrary extends CordovaPlugin {
 
     private void startRfidScan() {
 
-        thsi.rfidInterface.startRfidScan(false);
+        this.rfidInterface.startRfidScan(false);
 
         // Send no result for synchronous callback
         PluginResult pluginresult = new PluginResult(PluginResult.Status.NO_RESULT);
