@@ -30,6 +30,7 @@ public class RfidSdkLibrary extends CordovaPlugin {
 
     private static final String INIT = "init";
     private static final String CONNECT = "connect";
+    private static final String DISCONNECT = "disconnect";
     private static final String START_RFID = "start_rfid";
     private static final String STOP_RFID = "stop_rfid";
 
@@ -37,6 +38,7 @@ public class RfidSdkLibrary extends CordovaPlugin {
     private RfidLibraryInterface rfidInterface;
 
     private static CallbackContext myRfidCallbackContext = null;
+    private static CallbackContext myConnectStateContext = null;
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -50,9 +52,16 @@ public class RfidSdkLibrary extends CordovaPlugin {
             return true;
         }
         else if (action.equals(CONNECT)) {
+            myConnectStateContext = callbackContext;
+
             String connectType = args.getString(0);
 
             this.connectDevice(connectType);
+
+            return true;
+        }
+        else if (action.equals(DISCONNECT)) {
+            this.disconnectDevice();
 
             return true;
         }
@@ -77,6 +86,7 @@ public class RfidSdkLibrary extends CordovaPlugin {
             this.rfidInterface = new RfidLibraryInterface();
 
             this.rfidInterface.initDevice(deviceType, context);
+            setRfidListener();
 
             myCallbackContext.success();
         }
@@ -87,24 +97,24 @@ public class RfidSdkLibrary extends CordovaPlugin {
     }
 
     private void connectDevice(String connectType) {
-        try {            
-            this.rfidInterface.setOnConnectionStateListener(new OnConnectionStateListener() {
-                public void onConnectionStateChange(ConnectionState state) {
-                    if (state == ConnectionState.CONNECTED) {
-                        
-                        setRfidListener();
-
-                        myCallbackContext.success("Device connected!");
-                    }
-                }
-            });
-
+        try {                    
             this.rfidInterface.connectDevice(connectType);
+
+            // Send no result for synchronous callback
+            PluginResult pluginresult = new PluginResult(PluginResult.Status.NO_RESULT);
+            pluginresult.setKeepCallback(true);
+            this.myCallbackContext.sendPluginResult(pluginresult);
         }
         catch (Exception e) {
             e.printStackTrace();
             myCallbackContext.error(e.getMessage());
         }
+    }
+
+    private void disconnectDevice() {
+        this.rfidInterface.disconnectDevice();
+
+        myCallbackContext.success();
     }
 
     private void startRfidScan() {
