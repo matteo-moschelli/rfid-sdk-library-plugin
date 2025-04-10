@@ -127,6 +127,8 @@ public class RfidSdkLibrary extends CordovaPlugin {
     private void stopRfidScan() {
         this.rfidInterface.stopRfidScan();
 
+        myRfidCallbackContext = null;
+
         myCallbackContext.success();
     }
 
@@ -134,7 +136,6 @@ public class RfidSdkLibrary extends CordovaPlugin {
         this.rfidInterface.setOnRfidResultListener(new OnRfidResultListener() {
             public void onRfidFound(String rfid) {
                 myRfidCallbackContext.success("{\"status\":\"OK\", \"body\":\""+rfid+"\"}");
-                myRfidCallbackContext = null;
             }
 
             public void onRfidNotFound() {
@@ -143,7 +144,6 @@ public class RfidSdkLibrary extends CordovaPlugin {
 
             public void onRfidTooManyFound(int tagNumber) {
                 myRfidCallbackContext.success("{\"status\":\"KO\", \"error\":\"Troppi tag in campo (letti "+ tagNumber +" tag)\"}");
-                myRfidCallbackContext = null;
             }
 
             public void onRfidInventory() {
