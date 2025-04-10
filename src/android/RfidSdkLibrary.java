@@ -92,7 +92,7 @@ public class RfidSdkLibrary extends CordovaPlugin {
                 public void onConnectionStateChange(ConnectionState state) {
                     if (state == ConnectionState.CONNECTED) {
                         
-                        this.setRfidListener();
+                        setRfidListener();
 
                         myCallbackContext.success("Device connected!");
                     }
