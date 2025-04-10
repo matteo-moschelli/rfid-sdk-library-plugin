@@ -89,7 +89,7 @@ public class RfidSdkLibrary extends CordovaPlugin {
             setRfidListener();
 
             this.rfidInterface.setOnConnectionStateListener(new OnConnectionStateListener() {
-                public void onConnectionStateChange(com.sun.tools.jconsole.JConsoleContext.ConnectionState state) {
+                public void onConnectionStateChange(ConnectionState state) {
                     PluginResult res = new PluginResult(PluginResult.Status.OK, "{\"connectState\":\"" + state.toString() + "\"}");
                     res.setKeepCallback(true);
                     myConnectStateContext.sendPluginResult(res);
