@@ -66,14 +66,16 @@ public class RfidSdkLibrary extends CordovaPlugin {
 
     private void connectDevice(String connectType) {
         try {            
-            this.rfidInterface.connectDevice(connectType);
-
-            Observer<ConnectionState> mConnectionStateObserver = state -> {
-                if (state == ConnectionState.CONNECTED) {
-                    myCallbackContext.success("Dispositivo connesso");
+            this.rfidInterface.setOnConnectionStateListener(new OnConnectionStateListener() {
+                @Override
+                public void onConnectionStateChange(ConnectionState state) {
+                    if (state == ConnectionState.CONNECTED) {
+                        myCallbackContext.success("Device connected!");
+                    }
                 }
-            };            
-            this.rfidInterface.connectState.observeForever(mConnectionStateObserver);
+            });
+
+            this.rfidInterface.connectDevice(connectType);
         }
         catch (Exception e) {
             e.printStackTrace();
