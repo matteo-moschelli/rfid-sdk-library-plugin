@@ -88,14 +88,6 @@ public class RfidSdkLibrary extends CordovaPlugin {
             this.rfidInterface.initDevice(deviceType, context);
             setRfidListener();
 
-            this.rfidInterface.setOnConnectionStateListener(new OnConnectionStateListener() {
-                public void onConnectionStateChange(ConnectionState state) {
-                    PluginResult res = new PluginResult(PluginResult.Status.OK, "{\"connectState\":\"" + state.toString() + "\"}");
-                    res.setKeepCallback(true);
-                    myConnectStateContext.sendPluginResult(res);
-                }
-            });
-
             myCallbackContext.success();
         }
         catch (Exception e) {
@@ -105,7 +97,15 @@ public class RfidSdkLibrary extends CordovaPlugin {
     }
 
     private void connectDevice(String connectType) {
-        try {                    
+        try {                 
+            this.rfidInterface.setOnConnectionStateListener(new OnConnectionStateListener() {
+                public void onConnectionStateChange(ConnectionState state) {
+                    PluginResult res = new PluginResult(PluginResult.Status.OK, "{\"connectState\":\"" + state.toString() + "\"}");
+                    res.setKeepCallback(true);
+                    myConnectStateContext.sendPluginResult(res);
+                }
+            });
+            
             this.rfidInterface.connectDevice(connectType);
 
             // Send no result for synchronous callback
