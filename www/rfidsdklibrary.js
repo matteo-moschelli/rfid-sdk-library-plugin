@@ -19,3 +19,7 @@ exports.startRfidScan = function(success, error) {
 exports.stopRfidScan = function(success, error) {
     exec(success, error, 'RfidSdkLibrary', 'stop_rfid');
 };
+
+exports.getVersion = function(success, error) {
+    exec(success, error, 'RfidSdkLibrary', 'version');
+}

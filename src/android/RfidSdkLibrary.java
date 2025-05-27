@@ -22,6 +22,7 @@ import it.anseltechnology.rfid.sdklibrary.RfidLibraryInterface;
 import it.anseltechnology.rfid.sdklibrary.core.enums.ConnectionState;
 import it.anseltechnology.rfid.sdklibrary.core.interfaces.callbacks.OnConnectionStateListener;
 import it.anseltechnology.rfid.sdklibrary.core.interfaces.callbacks.OnRfidResultListener;
+import it.anseltechnology.rfid.sdklibrary.data.RfidInventoryResult;
 
 /**
  * This class echoes a string called from JavaScript.
@@ -33,6 +34,7 @@ public class RfidSdkLibrary extends CordovaPlugin {
     private static final String DISCONNECT = "disconnect";
     private static final String START_RFID = "start_rfid";
     private static final String STOP_RFID = "stop_rfid";
+    private static final String VERSION = "version";
 
     CallbackContext myCallbackContext;
     private RfidLibraryInterface rfidInterface;
@@ -74,6 +76,11 @@ public class RfidSdkLibrary extends CordovaPlugin {
         }
         else if (action.equals(STOP_RFID)) {
             this.stopRfidScan();
+
+            return true;
+        }
+        else if (action.equals(VERSION)) {
+            this.getVersion();
 
             return true;
         }
@@ -128,7 +135,7 @@ public class RfidSdkLibrary extends CordovaPlugin {
     private void startRfidScan() {
 
         try {
-            this.rfidInterface.startRfidScan(false);
+            this.rfidInterface.startRfidScan(true); // true is for reading Inventory and not single tag
 
             // Send no result for synchronous callback
             PluginResult pluginresult = new PluginResult(PluginResult.Status.NO_RESULT);
@@ -168,17 +175,31 @@ public class RfidSdkLibrary extends CordovaPlugin {
                 myRfidCallbackContext.sendPluginResult(res);
             }
 
-            public void onRfidInventory() {
-
+            public void onRfidInventory(RfidInventoryResult result) {
+                PluginResult res = new PluginResult(PluginResult.Status.OK, "{\"type\":\"INVENTORY_RESULT\", \"body\":" + JSON.stringify(result) + "}");
+                res.setKeepCallback(true);
+                myRfidCallbackContext.sendPluginResult(res);
             }
 
             public void onRfidReadStart() {
-                
+                PluginResult res = new PluginResult(PluginResult.Status.OK, "{\"type\":\"RFID_STATUS\", \"active\": true}");
+                res.setKeepCallback(true);
+                myRfidCallbackContext.sendPluginResult(res);
             }
 
             public void onRfidReadStop() {
-                
+                PluginResult res = new PluginResult(PluginResult.Status.OK, "{\"type\":\"RFID_STATUS\", \"active\": false}");
+                res.setKeepCallback(true);
+                myRfidCallbackContext.sendPluginResult(res);
             }
         });
+    }
+
+    void getVersion() {
+        String version = rfidInterface.getLibraryVersion();
+
+        PluginResult res = new PluginResult(PluginResult.Status.OK, version);
+        //pluginresult.setKeepCallback(true);
+        myCallbackContext.sendPluginResult(pluginresult);
     }
 }
