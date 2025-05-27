@@ -14,6 +14,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+
 import android.content.Context;
 import android.util.Log;
 import androidx.lifecycle.Observer;
@@ -176,7 +178,7 @@ public class RfidSdkLibrary extends CordovaPlugin {
             }
 
             public void onRfidInventory(RfidInventoryResult result) {
-                PluginResult res = new PluginResult(PluginResult.Status.OK, "{\"type\":\"INVENTORY_RESULT\", \"body\":" + JSON.stringify(result) + "}");
+                PluginResult res = new PluginResult(PluginResult.Status.OK, "{\"type\":\"INVENTORY_RESULT\", \"body\":" + Gson().toJson(result) + "}");
                 res.setKeepCallback(true);
                 myRfidCallbackContext.sendPluginResult(res);
             }
