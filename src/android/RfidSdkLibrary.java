@@ -178,7 +178,9 @@ public class RfidSdkLibrary extends CordovaPlugin {
             }
 
             public void onRfidInventory(RfidInventoryResult result) {
-                PluginResult res = new PluginResult(PluginResult.Status.OK, "{\"type\":\"INVENTORY_RESULT\", \"body\":" + Gson().toJson(result) + "}");
+                Gson gson = new Gson();
+
+                PluginResult res = new PluginResult(PluginResult.Status.OK, "{\"type\":\"INVENTORY_RESULT\", \"body\":" + gson.toJson(result) + "}");
                 res.setKeepCallback(true);
                 myRfidCallbackContext.sendPluginResult(res);
             }
@@ -202,6 +204,6 @@ public class RfidSdkLibrary extends CordovaPlugin {
 
         PluginResult res = new PluginResult(PluginResult.Status.OK, version);
         //pluginresult.setKeepCallback(true);
-        myCallbackContext.sendPluginResult(pluginresult);
+        myCallbackContext.sendPluginResult(res);
     }
 }
