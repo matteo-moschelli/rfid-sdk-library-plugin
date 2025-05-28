@@ -24,6 +24,7 @@ import it.anseltechnology.rfid.sdklibrary.RfidLibraryInterface;
 import it.anseltechnology.rfid.sdklibrary.core.enums.ConnectionState;
 import it.anseltechnology.rfid.sdklibrary.core.interfaces.callbacks.OnConnectionStateListener;
 import it.anseltechnology.rfid.sdklibrary.core.interfaces.callbacks.OnRfidResultListener;
+import it.anseltechnology.rfid.sdklibrary.core.interfaces.callbacks.OnBarcodeResultListener;
 import it.anseltechnology.rfid.sdklibrary.data.RfidInventoryResult;
 
 /**
@@ -34,15 +35,22 @@ public class RfidSdkLibrary extends CordovaPlugin {
     private static final String INIT = "init";
     private static final String CONNECT = "connect";
     private static final String DISCONNECT = "disconnect";
+    
     private static final String START_RFID = "start_rfid";
     private static final String STOP_RFID = "stop_rfid";
+    
+    private static final String START_BARCODE = "start_barcode";
+    private static final String STOP_BARCODE = "stop_barcode";
+    
     private static final String VERSION = "version";
+
 
     CallbackContext myCallbackContext;
     private RfidLibraryInterface rfidInterface;
 
     private static CallbackContext myRfidCallbackContext = null;
     private static CallbackContext myConnectStateContext = null;
+    private static CallbackContext myBarcodeCallbackContext = null;
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -81,6 +89,18 @@ public class RfidSdkLibrary extends CordovaPlugin {
 
             return true;
         }
+        else if (action.equals(START_BARCODE)) {
+            myBarcodeCallbackContext = callbackContext;
+
+            this.startBarcodeScan();
+
+            return true;
+        }
+        else if (action.equals(STOP_BARCODE)) {
+            this.stopBarcodeScan();
+
+            return true;
+        }
         else if (action.equals(VERSION)) {
             this.getVersion();
 
@@ -96,6 +116,7 @@ public class RfidSdkLibrary extends CordovaPlugin {
 
             this.rfidInterface.initDevice(deviceType, context);
             setRfidListener();
+            setBarcodeListener();
 
             myCallbackContext.success();
         }
@@ -195,6 +216,64 @@ public class RfidSdkLibrary extends CordovaPlugin {
                 PluginResult res = new PluginResult(PluginResult.Status.OK, "{\"type\":\"RFID_STATUS\", \"active\": false}");
                 res.setKeepCallback(true);
                 myRfidCallbackContext.sendPluginResult(res);
+            }
+        });
+    }
+
+    private void startBarcodeScan() {
+
+        try {
+            this.rfidInterface.startBarcodeScan();
+
+            // Send no result for synchronous callback
+            PluginResult pluginresult = new PluginResult(PluginResult.Status.NO_RESULT);
+            pluginresult.setKeepCallback(true);
+            this.myCallbackContext.sendPluginResult(pluginresult);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            myCallbackContext.error(e.getMessage());
+        }
+        
+    }
+
+    private void stopBarcodeScan() {
+        this.rfidInterface.stopBarcodeScan();
+
+        myBarcodeCallbackContext = null;
+
+        myCallbackContext.success();
+    }
+
+    private void setBarcodeListener() {
+        this.rfidInterface.setOnBarcodeResultListener(new OnBarcodeResultListener() {
+
+            @Override
+            public void onBarcodeFound(String barcode) {
+                PluginResult res = new PluginResult(PluginResult.Status.OK, "{\"type\":\"BARCODE_RESULT\", \"ok\":true, \"barcode\":\""+barcode+"\"}");
+                res.setKeepCallback(true);
+                myBarcodeCallbackContext.sendPluginResult(res);
+            }
+
+            @Override
+            public void onBarcodeNotFound() {
+                PluginResult res = new PluginResult(PluginResult.Status.OK, "{\"type\":\"BARCODE_RESULT\", \"ok\":false, \"error\":\"Barcode non trovato\"}");
+                res.setKeepCallback(true);
+                myBarcodeCallbackContext.sendPluginResult(res);
+            }
+
+            @Override
+            public void onBarcodeReadStart() {
+                PluginResult res = new PluginResult(PluginResult.Status.OK, "{\"type\":\"BARCODE_STATUS\", \"active\": true}");
+                res.setKeepCallback(true);
+                myBarcodeCallbackContext.sendPluginResult(res);
+            }
+
+            @Override
+            public void onBarcodeReadStop() {
+                PluginResult res = new PluginResult(PluginResult.Status.OK, "{\"type\":\"BARCODE_STATUS\", \"active\": false}");
+                res.setKeepCallback(true);
+                myBarcodeCallbackContext.sendPluginResult(res);
             }
         });
     }
